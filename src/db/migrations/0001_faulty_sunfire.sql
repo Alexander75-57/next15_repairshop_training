@@ -1,0 +1,1 @@
+ALTER TABLE "custommers" ALTER COLUMN "address2" DROP NOT NULL;
