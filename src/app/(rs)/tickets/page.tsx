@@ -24,7 +24,11 @@ export default async function Tickets({
             <>
                 <TicketSearch />
                 {/* <p>{JSON.stringify(results)}</p> */}
-                {results.length ? <TicketTable data={results} /> : null}
+                {results.length ? (
+                    <TicketTable data={results} />
+                ) : (
+                    <p className="mt-4">No open tickets found</p>
+                )}
             </>
         );
     }
@@ -35,7 +39,11 @@ export default async function Tickets({
         <>
             <TicketSearch />
             {/* <p>{JSON.stringify(results)}</p> */}
-            {results.length ? <TicketTable data={results} /> : null}
+            {results.length ? (
+                <TicketTable data={results} />
+            ) : (
+                <p className="mt-4">No result found</p>
+            )}
         </>
     );
 }

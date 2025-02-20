@@ -6,6 +6,7 @@ import {
     flexRender,
     getCoreRowModel,
     useReactTable,
+    getPaginationRowModel,
 } from '@tanstack/react-table';
 
 import { CircleCheckIcon, CircleXIcon } from 'lucide-react';
@@ -85,7 +86,13 @@ export default function TicketTable({ data }: Props) {
     const table = useReactTable({
         data,
         columns,
+        initialState: {
+            pagination: {
+                pageSize: 10,
+            },
+        },
         getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
     });
 
     return (
@@ -138,6 +145,16 @@ export default function TicketTable({ data }: Props) {
                     ))}
                 </TableBody>
             </Table>
+            <div className="flex justify-between items-center">
+                <div className="flex basic-1/3 items-center">
+                    <p className="whitespace-nowrap font-bold">
+                        {`Page ${
+                            table.getState().pagination.pageIndex + 1
+                        } of ${table.getPageCount()}`}
+                        &nbsp;&nbps;
+                    </p>
+                </div>
+            </div>
         </div>
     );
 }
