@@ -2,6 +2,8 @@ import CustomerSearch from '@/app/(rs)/customers/CustomerSearch';
 
 import { getCustomerSearchResult } from '@/lib/queries/getCustomerSearchResult';
 
+import CustomerTable from '@/app/(rs)/customers/CustomerTable';
+
 export const metadata = {
     title: 'Customers Search',
 };
@@ -22,7 +24,12 @@ export default async function Customers({
     return (
         <>
             <CustomerSearch />
-            <p>{JSON.stringify(results)}</p>
+            {/* <p>{JSON.stringify(results)}</p> // for test receive data from db whithiut form */}
+            {results.length ? (
+                <CustomerTable data={results} />
+            ) : (
+                <p className="mt-4">No result found</p>
+            )}
         </>
     );
 }

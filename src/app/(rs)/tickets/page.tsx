@@ -3,6 +3,8 @@ import TicketSearch from '@/app/(rs)/tickets/TicketSearch';
 import { getOpenTickets } from '@/lib/queries/getOpenTickets';
 import { getTicketSearchResult } from '@/lib/queries/getTicketSearchResult';
 
+import TicketTable from '@/app/(rs)/tickets/TicketTable';
+
 export const metadata = {
     title: 'Tickets Search',
 };
@@ -21,7 +23,8 @@ export default async function Tickets({
         return (
             <>
                 <TicketSearch />
-                <p>{JSON.stringify(results)}</p>
+                {/* <p>{JSON.stringify(results)}</p> */}
+                {results.length ? <TicketTable data={results} /> : null}
             </>
         );
     }
@@ -31,7 +34,8 @@ export default async function Tickets({
     return (
         <>
             <TicketSearch />
-            <p>{JSON.stringify(results)}</p>
+            {/* <p>{JSON.stringify(results)}</p> */}
+            {results.length ? <TicketTable data={results} /> : null}
         </>
     );
 }

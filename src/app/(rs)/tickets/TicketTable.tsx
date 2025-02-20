@@ -1,12 +1,14 @@
 'use client';
 
-import type { selectCustomerSchemaType } from '@/zod-schema/customer';
+import type { TicketSearchResultType } from '@/lib/queries/getTicketSearchResult';
 import {
     createColumnHelper,
     flexRender,
     getCoreRowModel,
     useReactTable,
 } from '@tanstack/react-table';
+
+import { CircleCheckIcon, CircleXIcon } from 'lucide-react';
 
 import {
     Table,
@@ -20,28 +22,64 @@ import {
 import { useRouter } from 'next/navigation';
 
 type Props = {
-    data: selectCustomerSchemaType[];
+    data: TicketSearchResultType;
 };
 
-export default function CustomerTable({ data }: Props) {
+type RowType = TicketSearchResultType[0];
+
+export default function TicketTable({ data }: Props) {
     const router = useRouter();
 
-    const columnHeadersArray: Array<keyof selectCustomerSchemaType> = [
+    const columnHeadersArray: Array<keyof RowType> = [
+        'ticketDate',
+        'title',
+        'tech',
         'firstName',
         'lastName',
         'email',
-        'phone',
-        'city',
-        'zip',
+        'completed',
     ];
 
-    const columnHelper = createColumnHelper<selectCustomerSchemaType>();
+    const columnHelper = createColumnHelper<TicketSearchResultType>();
 
     const columns = columnHeadersArray.map((columnName) => {
-        return columnHelper.accessor(columnName, {
-            id: columnName,
-            header: columnName[0].toUpperCase() + columnName.slice(1),
-        });
+        return columnHelper.accessor(
+            (row) => {
+                // transformational date
+                const value = row[columnName];
+                if (columnName === 'ticketDate' && value instanceof Date) {
+                    return value.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                    });
+                }
+                if (columnName === 'completed') {
+                    return value ? 'COMPLETED' : 'OPEN';
+                }
+                return value;
+            },
+            {
+                id: columnName,
+                header: columnName[0].toUpperCase() + columnName.slice(1),
+                cell: ({ getValue }) => {
+                    //presentational
+                    const value = getValue();
+                    if (columnName === 'completed') {
+                        return (
+                            <div className="grid place-content-center">
+                                {value === 'OPEN' ? (
+                                    <CircleXIcon className="opacity-25" />
+                                ) : (
+                                    <CircleCheckIcon className="text-green-600" />
+                                )}
+                            </div>
+                        );
+                    }
+                    return value;
+                },
+            }
+        );
     });
 
     const table = useReactTable({
@@ -84,7 +122,7 @@ export default function CustomerTable({ data }: Props) {
                             className="cursor-pointer hover:bg-border/25 dark:hover:bg-ring/40"
                             onClick={() =>
                                 router.push(
-                                    `/customers/form?customerId=${row.original.id}`
+                                    `/tickets/form?ticketId=${row.original.id}`
                                 )
                             }
                         >
