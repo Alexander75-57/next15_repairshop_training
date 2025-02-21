@@ -23,10 +23,11 @@ export default function Filter<T>({ column }: Props<T>) {
                 type="text"
                 value={(columnFilterValue ?? '') as string}
                 onChange={(value) => column.setFilterValue(value)}
-                placeholder={`Search... (${
+                /* placeholder={`Search... (${
                     [column.getFacetedUniqueValues()].filter((arr) => arr[0])
                         .length
-                })`}
+                })`} */
+                placeholder={`Search... (${sortedUniqueValues.length})`}
                 className="w-full border shadow rounded bg-card"
                 list={column.id + 'list'}
             />

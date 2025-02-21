@@ -97,7 +97,7 @@ export default function TicketTable({ data }: Props) {
                                 )
                             }
                         >
-                            {columnName[0].toUpperCase + columnName.slice(1)}
+                            {columnName[0].toUpperCase() + columnName.slice(1)}
                             {column.getIsSorted() === 'asc' && (
                                 <ArrowUp className="ml-2 h-4 w-4" />
                             )}
@@ -230,7 +230,7 @@ export default function TicketTable({ data }: Props) {
                 <div className="space-x-1">
                     <Button
                         variant="outline"
-                        onClick={() => table.resetSorting}
+                        onClick={() => table.resetSorting()}
                     >
                         Reset Sorting
                     </Button>
