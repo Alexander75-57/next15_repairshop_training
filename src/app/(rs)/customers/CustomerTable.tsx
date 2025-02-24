@@ -6,6 +6,7 @@ import {
     flexRender,
     getCoreRowModel,
     useReactTable,
+    CellContext,
 } from '@tanstack/react-table';
 
 import {
@@ -18,6 +19,18 @@ import {
 } from '@/components/ui/table';
 
 import { useRouter } from 'next/navigation';
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { MoreHorizontal, TableOfContents } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 type Props = {
     data: selectCustomerSchemaType[];
@@ -37,12 +50,59 @@ export default function CustomerTable({ data }: Props) {
 
     const columnHelper = createColumnHelper<selectCustomerSchemaType>();
 
-    const columns = columnHeadersArray.map((columnName) => {
+    const ActionsCell = ({
+        row,
+    }: CellContext<selectCustomerSchemaType, unknown>) => {
+        return (
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open Menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="and">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                        <Link
+                            href={`/tickets/form?customerId=${row.original.id}`}
+                            className="w-full"
+                            prefetch={false}
+                        >
+                            New Ticket
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                        <Link
+                            href={`/customers/form?customerId=${row.original.id}`}
+                            className="w-full"
+                            prefetch={false}
+                        >
+                            Edit Customer
+                        </Link>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        );
+    };
+    ActionsCell.displayName = 'ActionsCell'
+
+    /* const columns = columnHeadersArray.map((columnName) => {
         return columnHelper.accessor(columnName, {
             id: columnName,
             header: columnName[0].toUpperCase() + columnName.slice(1),
         });
-    });
+    }); // add ActionsCell change to: */
+
+    const columns = [
+        column
+        ... columnHeadersArray.map((columnName) => {
+        return columnHelper.accessor(columnName, {
+            id: columnName,
+            header: columnName[0].toUpperCase() + columnName.slice(1),
+        });
+    })]; 
 
     const table = useReactTable({
         data,
@@ -82,10 +142,10 @@ export default function CustomerTable({ data }: Props) {
                         <TableRow
                             key={row.id}
                             className="cursor-pointer hover:bg-border/25 dark:hover:bg-ring/40"
-                            onClick={() =>
+                            /* onClick={() =>
                                 router.push(
                                     `/customers/form?customerId=${row.original.id}`
-                                )
+                                ) // deleted as add ActionsCell*/
                             }
                         >
                             {row.getVisibleCells().map((cell) => (

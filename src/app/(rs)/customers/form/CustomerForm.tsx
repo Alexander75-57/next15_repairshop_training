@@ -17,7 +17,7 @@ import { SelectWhithLabel } from '@/components/inputs/SelectWithLabel';
 import { CheckBoxWhithLabel } from '@/components/inputs/CheckBoxWithLabel';
 
 import { StateArray } from '@/constants/StatesArray';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+/* import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'; */
 
 import { useAction } from 'next-safe-action/hooks';
 import { saveCustomerAction } from '@/app/actions/saveCustomerAction';
@@ -25,17 +25,38 @@ import { useToast } from '@/hooks/use-toast';
 import { LoaderCircle } from 'lucide-react';
 import { DisplayServerActionResponse } from '@/components/DisplayServerActionResponse';
 
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+
 type Props = {
     customer?: selectCustomerSchemaType;
+    isManager?: boolean | undefined;
 };
 
-export default function CustomerForm({ customer }: Props) {
-    const { getPermission /*, getPermissions */, isLoading } =
-        useKindeBrowserClient();
-
-    const isManager = !isLoading && getPermission('manager')?.isGranted;
+export default function CustomerForm({ customer, isManager = false }: Props) {
+    // const { getPermission /*, getPermissions */, isLoading } =
+    //     useKindeBrowserClient();
+    // const isManager = !isLoading && getPermission('manager')?.isGranted;
+    // deleted as add isManager and change to:
 
     const { toast } = useToast();
+
+    const searchParams = useSearchParams();
+    const hasCustomerId = searchParams.get('customerId');
+    const emptyValue: insertCustomerSchemaType = {
+        id: 0,
+        firstName: '',
+        lastName: '',
+        address1: '',
+        address2: '',
+        city: '',
+        state: '',
+        zip: '',
+        phone: '',
+        email: '',
+        notes: '',
+        active: true,
+    };
 
     //another method as in documentation
     /*  const permObj = getPermissions();
@@ -45,27 +66,32 @@ export default function CustomerForm({ customer }: Props) {
             (perm => perm === 'manager' || perm === 'admin'
         ); */
 
-    const defaultValues: insertCustomerSchemaType = {
-        id: customer?.id || 0,
-        firstName: customer?.firstName || '',
-        lastName: customer?.lastName || '',
-        address1: customer?.address1 || '',
-        address2: customer?.address2 || '',
-        city: customer?.city || '',
-        state: customer?.state || '',
-        zip: customer?.zip || '',
-        phone: customer?.phone || '',
-        email: customer?.email || '',
-        notes: customer?.notes || '',
-
-        active: customer?.active ?? true,
-    };
+    const defaultValues: insertCustomerSchemaType = hasCustomerId
+        ? {
+              id: customer?.id ?? 0,
+              firstName: customer?.firstName ?? '',
+              lastName: customer?.lastName ?? '',
+              address1: customer?.address1 ?? '',
+              address2: customer?.address2 ?? '',
+              city: customer?.city ?? '',
+              state: customer?.state ?? '',
+              zip: customer?.zip ?? '',
+              phone: customer?.phone ?? '',
+              email: customer?.email ?? '',
+              notes: customer?.notes ?? '',
+              active: customer?.active ?? true,
+          }
+        : emptyValue;
 
     const form = useForm<insertCustomerSchemaType>({
         mode: 'onBlur',
         resolver: zodResolver(insertCustomerSchema),
         defaultValues,
     });
+
+    useEffect(() => {
+        form.reset(hasCustomerId ? defaultValues : emptyValue);
+    }, [searchParams.get('customerId')]);
 
     //add server ---------- // rename execute to executeSave
     const {
@@ -164,9 +190,10 @@ export default function CustomerForm({ customer }: Props) {
                             className="h-40"
                         />
 
-                        {isLoading ? (
+                        {/* {isLoading ? (
                             <p>Loading...</p>
-                        ) : isManager && customer?.id ? (
+                        ) : isManager && customer?.id ? ( // add isManager*/}
+                        {isManager && customer?.id ? (
                             <CheckBoxWhithLabel<insertCustomerSchemaType>
                                 fieldTitle="Active"
                                 nameInSchema="active"

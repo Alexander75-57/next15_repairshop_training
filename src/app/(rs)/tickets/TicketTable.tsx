@@ -104,6 +104,9 @@ export default function TicketTable({ data }: Props) {
             },
             {
                 id: columnName,
+                size:
+                    columnWidths[columnName as keyof typeof columnWidths] ??
+                    undefined,
                 /* header: columnName[0].toUpperCase() + columnName.slice(1), */
                 header: ({ column }) => {
                     return (
@@ -189,6 +192,7 @@ export default function TicketTable({ data }: Props) {
                                         <TableHead
                                             key={header.id}
                                             className="bg-secondary p-1"
+                                            style={{ width: header.getSize() }}
                                         >
                                             <div>
                                                 {header.isPlaceholder
@@ -203,6 +207,15 @@ export default function TicketTable({ data }: Props) {
                                                 <div className="grid place-content-center">
                                                     <Filter
                                                         column={header.column}
+                                                        filteredRows={table
+                                                            .getFilteredRowModel()
+                                                            .rows.map((row) =>
+                                                                row.getValue(
+                                                                    header
+                                                                        .column
+                                                                        .id
+                                                                )
+                                                            )}
                                                     />
                                                 </div>
                                             ) : null}
