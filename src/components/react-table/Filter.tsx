@@ -12,7 +12,6 @@ export default function Filter<T>({ column, filteredRows }: Props<T>) {
     /*  const sortedUniqueValues = Array.from(
         column.getFacetedUniqueValues().keys()
     ).sort(); */ // change to
-
     const uniqueFilteredValue = new Set(filteredRows);
     const sortedUniqueValues = Array.from(uniqueFilteredValue).sort();
 

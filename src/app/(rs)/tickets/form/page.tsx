@@ -127,11 +127,20 @@ export default async function TicketFormPage({
                 kindeInit(); // Initilizes the Kinde Managment API
                 const { users } = await Users.getUsers();
 
-                const techs = users
+                /* const techs = users
                     ? users.map((user) => ({
                           id: user.email?.toLowerCase()!,
                           description: user.email?.toLowerCase()!,
                       }))
+                    : []; // change by GPT*/
+                const techs = users
+                    ? users.map((user) => {
+                          const email = user.email?.toLowerCase();
+                          return {
+                              id: email || 'unknown',
+                              description: email || 'unknown',
+                          };
+                      })
                     : [];
                 return (
                     <TicketForm

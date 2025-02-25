@@ -28,7 +28,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, TableOfContents } from 'lucide-react';
+import {
+    MoreHorizontal,
+    TableOfContents,
+    TableOfContentsIcon,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -50,6 +54,7 @@ export default function CustomerTable({ data }: Props) {
 
     const columnHelper = createColumnHelper<selectCustomerSchemaType>();
 
+    //add column with drop down menu for create new ticket
     const ActionsCell = ({
         row,
     }: CellContext<selectCustomerSchemaType, unknown>) => {
@@ -86,7 +91,7 @@ export default function CustomerTable({ data }: Props) {
             </DropdownMenu>
         );
     };
-    ActionsCell.displayName = 'ActionsCell'
+    ActionsCell.displayName = 'ActionsCell';
 
     /* const columns = columnHeadersArray.map((columnName) => {
         return columnHelper.accessor(columnName, {
@@ -96,13 +101,18 @@ export default function CustomerTable({ data }: Props) {
     }); // add ActionsCell change to: */
 
     const columns = [
-        column
-        ... columnHeadersArray.map((columnName) => {
-        return columnHelper.accessor(columnName, {
-            id: columnName,
-            header: columnName[0].toUpperCase() + columnName.slice(1),
-        });
-    })]; 
+        columnHelper.display({
+            id: 'actions',
+            header: () => <TableOfContentsIcon />,
+            cell: ActionsCell,
+        }),
+        ...columnHeadersArray.map((columnName) => {
+            return columnHelper.accessor(columnName, {
+                id: columnName,
+                header: columnName[0].toUpperCase() + columnName.slice(1),
+            });
+        }),
+    ];
 
     const table = useReactTable({
         data,
@@ -120,9 +130,17 @@ export default function CustomerTable({ data }: Props) {
                                 return (
                                     <TableHead
                                         key={header.id}
-                                        className="bg-secondary"
+                                        className={`bg-secondary ${
+                                            header.id === 'action' ? 'w-12' : ''
+                                        }`}
                                     >
-                                        <div>
+                                        <div
+                                            className={`${
+                                                header.id === 'action'
+                                                    ? 'flex justify-center items-center'
+                                                    : ''
+                                            }`}
+                                        >
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -146,7 +164,6 @@ export default function CustomerTable({ data }: Props) {
                                 router.push(
                                     `/customers/form?customerId=${row.original.id}`
                                 ) // deleted as add ActionsCell*/
-                            }
                         >
                             {row.getVisibleCells().map((cell) => (
                                 <TableCell key={cell.id} className="Border">
