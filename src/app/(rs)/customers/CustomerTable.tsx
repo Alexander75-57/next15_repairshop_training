@@ -18,7 +18,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 
-import { useRouter } from 'next/navigation';
+/* import { useRouter } from 'next/navigation'; */
 
 import {
     DropdownMenu,
@@ -28,11 +28,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-    MoreHorizontal,
-    TableOfContents,
-    TableOfContentsIcon,
-} from 'lucide-react';
+import { MoreHorizontal, TableOfContentsIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -41,7 +37,7 @@ type Props = {
 };
 
 export default function CustomerTable({ data }: Props) {
-    const router = useRouter();
+    /* const router = useRouter(); */
 
     const columnHeadersArray: Array<keyof selectCustomerSchemaType> = [
         'firstName',
@@ -66,7 +62,7 @@ export default function CustomerTable({ data }: Props) {
                         <MoreHorizontal className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="and">
+                <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>

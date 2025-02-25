@@ -9,7 +9,7 @@ export const actionClient = createSafeActionClient({
             actionName: z.string(),
         });
     },
-    handleServerError(e, utils) {
+    handleServerError(e /* , utils */) {
         if (e.constructor.name === 'NeonDbError') {
             const { code, detail } = e as NeonDbError;
             if (code === '23505') {

@@ -75,7 +75,7 @@ export default function TicketForm({
                 description: data?.message,
             });
         },
-        onError({ error }) {
+        onError() {
             toast({
                 variant: 'default',
                 title: 'Error',
