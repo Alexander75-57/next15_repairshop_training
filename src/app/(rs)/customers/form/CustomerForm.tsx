@@ -100,13 +100,15 @@ export default function CustomerForm({ customer, isManager = false }: Props) {
         isExecuting: isSaving,
         reset: resetSaveAction,
     } = useAction(saveCustomerAction, {
-        onSuccess: (data) => {
-            //toast user
-            toast({
-                variant: 'default',
-                title: 'Success',
-                description: data?.message,
-            });
+        onSuccess: ({ data }) => {
+            if (data?.message) {
+                //toast user
+                toast({
+                    variant: 'default',
+                    title: 'Success',
+                    description: data?.message,
+                });
+            }
         },
         onError() {
             toast({

@@ -83,7 +83,7 @@ export default function TicketTable({ data }: Props) {
         email: 225,
     };
 
-    const columnHelper = createColumnHelper<TicketSearchResultType>();
+    const columnHelper = createColumnHelper<RowType>();
 
     const columns = columnHeadersArray.map((columnName) => {
         return columnHelper.accessor(

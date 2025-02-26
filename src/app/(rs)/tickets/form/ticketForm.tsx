@@ -67,7 +67,7 @@ export default function TicketForm({
         isExecuting: isSaving,
         reset: resetSaveAction,
     } = useAction(saveTicketAction, {
-        onSuccess: (data) => {
+        onSuccess: ({ data }) => {
             //toast user
             toast({
                 variant: 'default',
